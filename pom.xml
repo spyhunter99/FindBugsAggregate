@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.github.spyhunter99</groupId>
+    <artifactId>findbugs-report-parent</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+       
+    </properties>
+    
+   
+    <name>Findbugs Aggregate Report Plugin Parent</name>
+    <description>Generates a combined Findbugs report</description>
+    
+    <url>https://github.com/spyhunter99/FindbugsAggregated</url>
+    <organization>
+        <name>Spyhunter99@github</name>
+        <url>https://github.com/spyhunter99</url>
+    </organization>
+    <issueManagement>
+        <system>Github</system>
+        <url>https://github.com/spyhunter99/FindbugsAggregated/issues/</url>
+    </issueManagement>
+    
+    
+    <scm>
+        <connection>scm:git:https://github.com/spyhunter99/FindbugsAggregated.git</connection>
+        <developerConnection>scm:git:https://github.com/spyhunter99/FindbugsAggregated.git</developerConnection>
+        <url>https://github.com/spyhunter99/FindbugsAggregated</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <distributionManagement>
+        <repository>
+            <id>sonatype-release</id>
+            <layout>default</layout>
+            <name>sonatype releases</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+        </repository>
+        <snapshotRepository>
+            <id>sonatype-snapshot</id>
+            <layout>default</layout>
+            <name>sonatype releases</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <site>
+            <id>website</id>
+            <url>https://github.com/spyhunter99/FindbugsAggregated/releases</url>
+        </site>
+    </distributionManagement>
+    <inceptionYear>2017</inceptionYear>
+
+    <developers>
+        <developer>
+            <id>alexoree</id>
+            <name>AO</name>
+            <email>alexoree A T@@ apache.org</email>
+            <url>http://www.apache.org</url>
+            <organization>ASF</organization>
+        </developer>
+    </developers>
+    <contributors>
+    </contributors>
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+
+    
+    
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-plugin-api</artifactId>
+            <version>3.3.9</version>
+            <type>jar</type>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.apache.maven.reporting</groupId>
+            <artifactId>maven-reporting-api</artifactId>
+            <version>3.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.maven.reporting</groupId>
+            <artifactId>maven-reporting-impl</artifactId>
+            <version>2.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-utils</artifactId>
+            <version>3.0.24</version>
+        </dependency>
+      
+    </dependencies>
+    
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.6</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>2.5.3</version>
+                    <configuration>
+                        <autoVersionSubmodules>true</autoVersionSubmodules>
+                        <preparationGoals>clean install</preparationGoals>
+                        <goals>deploy</goals>
+                        <releaseProfiles>findbugs-release</releaseProfiles>
+                        <tagNameFormat>findbugs-@{project.version}</tagNameFormat>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    
+        <plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>3.0.5</version>
+            </plugin>
+           
+           
+            
+        </plugins>
+            
+    </build>
+    <modules>
+        <module>findbugs-report-plugin</module>
+        <module>FindbugsTestProject1</module>
+        <module>FindbugsTestProject2</module>
+    </modules>
+    <reporting>
+        <plugins>
+             <plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>3.0.5</version>
+			  </plugin>
+             <plugin>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>findbugs-report-plugin</artifactId>
+                <version>${project.version}</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>findbugs-aggregate</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            
+         
+        </plugins>
+    </reporting>
+     
+    <profiles>
+        <profile>
+            <id>findbugs-release</id>
+
+
+            <build>
+                <plugins>
+                    
+                    <!-- We want to deploy the artifact to a staging location for perusal -->
+                    <plugin>
+                        <inherited>true</inherited>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-deploy-plugin</artifactId>
+                        <configuration>
+                            <updateReleaseInfo>true</updateReleaseInfo>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                   
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                    </plugin>
+                    <!-- We want to sign the artifact, the POM, and all attached artifacts -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <id>sign-release-artifacts</id>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- END SNIPPET: release-profile -->
+    </profiles> 
+</project>
