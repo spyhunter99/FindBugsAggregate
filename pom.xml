@@ -28,8 +28,8 @@
     
     
     <scm>
-        <connection>scm:git:https://github.com/spyhunter99/FindbugsAggregated.git</connection>
-        <developerConnection>scm:git:https://github.com/spyhunter99/FindbugsAggregated.git</developerConnection>
+        <connection>scm:git:https://github.com/spyhunter99/FindBugsAggregate.git</connection>
+        <developerConnection>scm:git:https://github.com/spyhunter99/FindBugsAggregate.git</developerConnection>
         <url>https://github.com/spyhunter99/FindbugsAggregated</url>
         <tag>HEAD</tag>
     </scm>
