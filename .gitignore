@@ -3,7 +3,6 @@ bin/
 build/
 nbproject/
 gen/
-generated/
 libs/
 obj/
 target/
@@ -90,7 +89,6 @@ bin/
 build/
 nbproject/
 gen/
-generated/
 libs/
 obj/
 external/

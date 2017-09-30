@@ -128,13 +128,13 @@
         </pluginManagement>
     
         <plugins>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>findbugs-maven-plugin</artifactId>
-				<version>3.0.5</version>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>3.0.5</version>
             </plugin>
            
-           
+          
             
         </plugins>
             
@@ -146,15 +146,18 @@
     </modules>
     <reporting>
         <plugins>
-             <plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>findbugs-maven-plugin</artifactId>
-				<version>3.0.5</version>
-			  </plugin>
-             <plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>3.0.5</version>
+            </plugin>
+            
+            
+            <plugin>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>findbugs-report-plugin</artifactId>
                 <version>${project.version}</version>
+				
                 <reportSets>
                     <reportSet>
                         <reports>
@@ -163,7 +166,6 @@
                     </reportSet>
                 </reportSets>
             </plugin>
-            
          
         </plugins>
     </reporting>

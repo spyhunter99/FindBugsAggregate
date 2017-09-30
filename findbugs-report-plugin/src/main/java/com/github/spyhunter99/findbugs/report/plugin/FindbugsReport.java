@@ -13,9 +13,9 @@
  */
 package com.github.spyhunter99.findbugs.report.plugin;
 
+import generated.BugCollection;
 import java.io.File;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -25,6 +25,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.bind.JAXB;
 import org.apache.maven.doxia.sink.Sink;
 import org.apache.maven.doxia.siterenderer.Renderer;
 import org.apache.maven.doxia.tools.SiteTool;
@@ -37,7 +38,6 @@ import org.apache.maven.settings.Settings;
 import org.codehaus.plexus.util.FileUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 /**
@@ -197,12 +197,23 @@ public class FindbugsReport extends AbstractMavenReport {
     }
 
     @Override
+    public boolean canGenerateReport() {
+        return (project.isExecutionRoot());
+    }
+
+    @Override
     protected void executeReport(Locale locale) throws MavenReportException {
-        if (project.hasParent()) {
-            //TODO revisit this in the future, i think 1 per project is sufficient
-            //must there may be use cases for individual/module level docs
-            return;
-        }
+        //TODO current issue, if you run
+        //mvn clean install
+        //then mvn site (with findbugs as a report plugin)
+        //findbugs will only run on the child modules, but it's AFTER the root project's
+        //site stuff is done.
+
+        //work around
+        //mvn clean install
+        //mvn findbugs:fingbugs
+        //mvn site
+        //other possible solutions add shutdown hook? a hack but it might work.
         try {
 
             List<FindbugsItem> jacocoReports = copyResources(project);
@@ -239,44 +250,60 @@ public class FindbugsReport extends AbstractMavenReport {
             sink.tableHeaderCell();
             sink.rawText("Classes");
             sink.tableHeaderCell_();
-
-            sink.tableHeaderCell();
-            sink.rawText("Bugs");
-            sink.tableHeaderCell_();
-
-            sink.tableHeaderCell();
-            sink.rawText("Errors");
-            sink.tableHeaderCell_();
-
-            sink.tableHeaderCell();
+            
+             sink.tableHeaderCell();
             sink.rawText("Missing Classes");
             sink.tableHeaderCell_();
 
+
+            sink.tableHeaderCell();
+            sink.rawText("High");
+            sink.tableHeaderCell_();
+
+            sink.tableHeaderCell();
+            sink.rawText("Medium");
+            sink.tableHeaderCell_();
+
+            sink.tableHeaderCell();
+            sink.rawText("Low");
+            sink.tableHeaderCell_();
+
+            sink.tableHeaderCell();
+            sink.rawText("Total Bugs");
+            sink.tableHeaderCell_();
+
+           
+           
             sink.tableRow_();
 
+            boolean success = false;
             //for reach module
+            long totalBugs = 0;
+            long totalBugsP1 = 0;
+            long totalBugsP2 = 0;
+            long totalBugsP3 = 0;
+            long totalMissingClasses = 0;
+            long totalClasses = 0;
+
             Iterator<FindbugsItem> iterator = set.iterator();
             while (iterator.hasNext()) {
                 FindbugsItem next = iterator.next();
                 if (next.getReportDirs().isEmpty()) {
-                    /*sink.tableRow();
-                    sink.tableCell();
-                    sink.rawText(next.getModuleName());
-                    sink.tableCell_();
 
-                    sink.tableCell();
-                    sink.rawText("N/A");
-                    sink.tableCell_();
-
-                    sink.tableCell();
-                    sink.rawText("N/A");
-                    sink.tableCell_();
-                    sink.tableRow_();*/
                 } else {
+                    success = true;
                     for (int k = 0; k < next.getReportDirs().size(); k++) {
+
+                        totalMissingClasses += next.getReportDirs().get(k).getMissingClasses();
+                        totalClasses += next.getReportDirs().get(k).getClasses();
+                        totalBugsP3 += next.getReportDirs().get(k).getBugsP3();
+                        totalBugsP2 += next.getReportDirs().get(k).getBugsP2();
+                        totalBugsP1 += next.getReportDirs().get(k).getBugsP1();
+                        totalBugs += next.getReportDirs().get(k).getBugs();
+
                         sink.tableRow();
                         sink.tableCell();
-                        sink.link(next.getModuleName() + "/" + next.getReportDirs().get(k).getReportDir().getName());
+                        sink.link(next.getModuleName() + "/findbugs.html");
                         sink.rawText(next.getModuleName());
                         sink.link_();
                         sink.tableCell_();
@@ -286,23 +313,72 @@ public class FindbugsReport extends AbstractMavenReport {
                         sink.tableCell_();
 
                         sink.tableCell();
+                        sink.rawText(next.getReportDirs().get(k).getMissingClasses() + "");
+                        sink.tableCell_();
+                        
+                        sink.tableCell();
+                        sink.rawText(next.getReportDirs().get(k).getBugsP1() + "");
+                        sink.tableCell_();
+
+                        sink.tableCell();
+                        sink.rawText(next.getReportDirs().get(k).getBugsP2() + "");
+                        sink.tableCell_();
+
+                        sink.tableCell();
+                        sink.rawText(next.getReportDirs().get(k).getBugsP3() + "");
+                        sink.tableCell_();
+
+                        sink.tableCell();
                         sink.rawText(next.getReportDirs().get(k).getBugs() + "");
                         sink.tableCell_();
 
-                        sink.tableCell();
-                        sink.rawText(next.getReportDirs().get(k).getErrors() + "");
-                        sink.tableCell_();
-
-                        sink.tableCell();
-                        sink.rawText(next.getReportDirs().get(k).getMissingClasses() + "");
-                        sink.tableCell_();
+                    
 
                         sink.tableRow_();
                     }
                 }
             }
+            if (success) {
+                sink.tableRow();
+                sink.tableCell();
+                sink.rawText("Total");
+                sink.link_();
+                sink.tableCell_();
+
+                sink.tableCell();
+                sink.rawText(totalClasses + "");
+                sink.tableCell_();
+                
+                
+                sink.tableCell();
+                sink.rawText(totalMissingClasses + "");
+                sink.tableCell_();
+
+
+                sink.tableCell();
+                sink.rawText(totalBugsP1 + "");
+                sink.tableCell_();
+
+                sink.tableCell();
+                sink.rawText(totalBugsP2 + "");
+                sink.tableCell_();
+
+                sink.tableCell();
+                sink.rawText(totalBugsP3 + "");
+                sink.tableCell_();
+
+                sink.tableCell();
+                sink.rawText(totalBugs + "");
+                sink.tableCell_();
+
+                sink.tableRow_();
+            }
 
             sink.table_();
+
+            if (!success) {
+                sink.rawText("No findbugsXml.xml reports found. Did you run findbugs before mvn site?");
+            }
             sink.paragraph_();
             sink.section2_();    //div
             sink.section1_();
@@ -356,7 +432,8 @@ public class FindbugsReport extends AbstractMavenReport {
             File moduleBaseDir = project.getBasedir();
             File target = new File(moduleBaseDir, "target");
             if (target.exists()) {
-                File findbugsXml = new File(moduleBaseDir, "target/site/findbugs.html");  //TODO properterize
+                //FIXME propertize this
+                File findbugsXml = new File(moduleBaseDir, "target/findbugsXml.xml");
 
                 FindbugsItem item = new FindbugsItem();
                 item.setModuleName(project.getArtifactId());
@@ -378,51 +455,30 @@ public class FindbugsReport extends AbstractMavenReport {
     }
 
     private FindbugsReportMetric getMetric(File string) throws IOException {
-        Document doc = Jsoup.parse(string, "UTF-8");
-        Elements h2s = doc.select("h2");
-        if (h2s.size() == 0) {
-            return null;
+        FindbugsReportMetric metrics = new FindbugsReportMetric();
+        metrics.setReportDir(string);
+
+        BugCollection bugs = JAXB.unmarshal(string, BugCollection.class);
+        if (bugs.getErrors() != null && bugs.getErrors().getMissingClasses() != null) {
+            metrics.setMissingClasses(bugs.getErrors().getMissingClasses());
         }
 
-        for (int i = 0; i < h2s.size(); i++) {
-            if (h2s.get(i).text().toLowerCase().contains("summary")) {
-                //found the summary
-
-                //now find the next table in the dom
-                Elements tables = h2s.get(i).siblingElements().select("table");
-                for (int k = 0; k < tables.size(); k++) {
-                    Elements tds = tables.get(k).select("td");
-
-                    if (tds.size() == 4) {
-                        FindbugsReportMetric metrics = new FindbugsReportMetric();
-                        metrics.setReportDir(string);
-
-                        for (int j = 0; j < tds.size(); j++) {
-                            switch (j) {
-                                case 0:
-                                    metrics.setClasses(Long.parseLong(tds.get(j).text().trim()));
-                                    break;
-                                case 1:
-                                    metrics.setBugs(Long.parseLong(tds.get(j).text().trim()));
-                                    break;
-                                case 2:
-                                    metrics.setErrors(Long.parseLong(tds.get(j).text().trim()));
-                                    break;
-                                case 3:
-                                    metrics.setMissingClasses(Long.parseLong(tds.get(j).text().trim()));
-                                    break;
-
-                            }
-
-                        }
-                        return metrics;
-                    }
-                    break;
-                }
-
-            }
+        metrics.setBugs(bugs.getBugInstance().size());
+        if (bugs.getErrors() != null && bugs.getErrors().getErrors() != null) {
+            metrics.setErrors(bugs.getErrors().getErrors());
         }
-        return null;
+        if (bugs.getFindBugsSummary().getPriority1() != null) {
+            metrics.setBugsP1(bugs.getFindBugsSummary().getPriority1());
+        }
+        if (bugs.getFindBugsSummary().getPriority2() != null) {
+            metrics.setBugsP2(bugs.getFindBugsSummary().getPriority2());
+        }
+        if (bugs.getFindBugsSummary().getPriority3() != null) {
+            metrics.setBugsP3(bugs.getFindBugsSummary().getPriority3());
+        }
+        metrics.setBugs(bugs.getFindBugsSummary().getTotalBugs());
+        metrics.setClasses(bugs.getFindBugsSummary().getTotalClasses());
+        return metrics;
 
     }
 }

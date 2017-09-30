@@ -15,7 +15,7 @@ import java.io.File;
 public class FindbugsReportMetric {
 
     private File reportDir;
-    
+    private long bugsP1=0,bugsP2=0, bugsP3=0;
     private long classes=0;
     private long bugs=0;
     private long errors=0;
@@ -60,5 +60,29 @@ public class FindbugsReportMetric {
     public void setMissingClasses(long missingClasses) {
         this.missingClasses = missingClasses;
     }
+
+        public long getBugsP1() {
+                return bugsP1;
+        }
+
+        public void setBugsP1(long bugsP1) {
+                this.bugsP1 = bugsP1;
+        }
+
+        public long getBugsP2() {
+                return bugsP2;
+        }
+
+        public void setBugsP2(long bugsP2) {
+                this.bugsP2 = bugsP2;
+        }
+
+        public long getBugsP3() {
+                return bugsP3;
+        }
+
+        public void setBugsP3(long bugsP3) {
+                this.bugsP3 = bugsP3;
+        }
 
 }

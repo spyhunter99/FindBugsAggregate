@@ -8,7 +8,7 @@ that lists each module, along with a summary of the results from the analysis.
 Maven reporting plugins have no mechanism for depending on the output of another reporting plugin. More over, there's 
 no way to specify that this plugin must run after the actual find bugs analysis on all child modules.
 
-Unfortunately, this means you have to run `mvn site` **twice**.
+Unfortunately, this means you have to run `findbugs:findbugs` before `mvn site`
 
 
 ## Usage
@@ -16,10 +16,10 @@ Unfortunately, this means you have to run `mvn site` **twice**.
 Put this in your parent pom file.
 
 ````xml
-	<project>
+<project>
 	...
 	
-	  <reporting>
+	<reporting>
         <plugins>
              <plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -29,7 +29,7 @@ Put this in your parent pom file.
              <plugin>
                 <groupId>com.github.spyhunter99</groupId>
                 <artifactId>findbugs-report-plugin</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
+                <version>1.0.0</version>
                 <reportSets>
                     <reportSet>
                         <reports>
@@ -40,7 +40,7 @@ Put this in your parent pom file.
             </plugin>
         </plugins>
     </reporting>
-
+</project>
 ````
 
 ## Execute it
@@ -48,9 +48,9 @@ Put this in your parent pom file.
 ````
 //build your project
 mvn clean install
-//build the initial site, including the findbugs analysis
-mvn site
-//build it again, this time the aggregate report is generated
+//run findbugs
+mvn findbugs:findbugs
+//build the site
 mvn site
 //stage the site to ensure that all the relative links are functional
 mvn site:stage
