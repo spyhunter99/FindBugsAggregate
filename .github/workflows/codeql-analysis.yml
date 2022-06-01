@@ -86,10 +86,7 @@ jobs:
       uses: github/codeql-action/init@v1
       with:
         languages: ${{ matrix.language }}
-     
-    - name: Install icedtea
-      run: sudo apt-get install -y icedtea-netx
-
+  
     - name: javabuild
       run: mvn -B install -DskipTests=true
       

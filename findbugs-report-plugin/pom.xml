@@ -111,12 +111,7 @@
             <artifactId>doxia-site-renderer</artifactId>
             <version>${doxiaSitetoolsVersion}</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.maven.doxia</groupId>
-            <artifactId>doxia-integration-tools</artifactId>
-            <version>${doxiaSitetoolsVersion}</version>
-        </dependency>
-
+       
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
