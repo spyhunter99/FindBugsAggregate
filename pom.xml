@@ -106,7 +106,14 @@
     
     <build>
         <pluginManagement>
+			
             <plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-plugin-plugin</artifactId>
+                    <version>3.4</version>
+				</plugin>
+			
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-site-plugin</artifactId>
