@@ -12,7 +12,7 @@
     <name>Findbugs Aggregated Site Report</name>
     
     <properties>
-        <doxiaVersion>1.7</doxiaVersion>
+        <doxiaVersion>1.11.1</doxiaVersion>
         <doxiaSitetoolsVersion>1.7.4</doxiaSitetoolsVersion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
