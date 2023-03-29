@@ -1,6 +1,6 @@
 # Findbugs/Spotbugs Aggregated Maven Site Report
 
-This plugin (is not perfect) will take Findbugs reports of your maven project, then create a new report with `mvn site`
+This plugin (is not perfect) will take Findbugs/spotbugs reports of your maven project, then create a new report with `mvn site`
 that lists each module, along with a summary of the results from the analysis.
 
 ## Limitations
@@ -8,7 +8,7 @@ that lists each module, along with a summary of the results from the analysis.
 Maven reporting plugins have no mechanism for depending on the output of another reporting plugin. More over, there's 
 no way to specify that this plugin must run after the actual find bugs analysis on all child modules.
 
-Unfortunately, this means you have to run `findbugs:findbugs` before `mvn site`
+Unfortunately, this means you have to run `findbugs:findbugs` or `spotbugs:spotbugs` before `mvn site`
 
 
 ## Usage
@@ -29,7 +29,7 @@ Put this in your parent pom file.
              <plugin>
                 <groupId>com.github.spyhunter99</groupId>
                 <artifactId>findbugs-report-plugin</artifactId>
-                <version>1.0.0</version>
+                <version>1.0.2</version>
                 <reportSets>
                     <reportSet>
                         <reports>
@@ -48,7 +48,7 @@ Put this in your parent pom file.
 ````
 //build your project
 mvn clean install
-//run findbugs
+//run findbugs or spotbugs!
 mvn findbugs:findbugs
 //build the site
 mvn site
