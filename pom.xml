@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.spyhunter99</groupId>
     <artifactId>findbugs-report-parent</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.0.2</version>
     <packaging>pom</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -51,7 +51,7 @@
         <connection>scm:git:https://github.com/spyhunter99/FindbugsAggregate.git</connection>
         <developerConnection>scm:git:https://github.com/spyhunter99/FindbugsAggregate.git</developerConnection>
         <url>https://github.com/spyhunter99/FindbugsAggregated</url>
-        <tag>HEAD</tag>
+        <tag>findbugs-1.0.2</tag>
     </scm>
 
     <distributionManagement>
