@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.github.spyhunter99.findbugs.report.plugin;
 
 import java.util.ArrayList;
@@ -15,6 +14,12 @@ import java.util.Objects;
  * @author AO
  */
 public class FindbugsItem {
+
+    private boolean findbugs = false;
+
+    public FindbugsItem(boolean isFindbugs) {
+        findbugs = isFindbugs;
+    }
 
     @Override
     public int hashCode() {
@@ -58,5 +63,9 @@ public class FindbugsItem {
 
     public void setReportDirs(List<FindbugsReportMetric> reportDirs) {
         this.reportDirs = reportDirs;
+    }
+
+    public boolean isFindBugs() {
+        return findbugs;
     }
 }

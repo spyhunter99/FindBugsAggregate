@@ -229,12 +229,12 @@ public class FindbugsReport extends AbstractMavenReport {
 
             sink.section1();    //div
             sink.sectionTitle1();
-            sink.rawText(project.getName() + " - Findbugs Aggregated Report");
+            sink.rawText(project.getName() + " - Findbugs/Spotbugs Aggregated Report");
             sink.sectionTitle1_();
 
             sink.section2();    //div
             sink.sectionTitle2();
-            sink.rawText("Findbugs Warnings");
+            sink.rawText("Warnings");
             sink.sectionTitle2_();
 
             sink.paragraph();
@@ -297,7 +297,11 @@ public class FindbugsReport extends AbstractMavenReport {
 
                         sink.tableRow();
                         sink.tableCell();
-                        sink.link(next.getModuleName() + "/findbugs.html");
+                        if (next.isFindBugs()) {
+                            sink.link(next.getModuleName() + "/findbugs.html");
+                        } else {
+                            sink.link(next.getModuleName() + "/spotbugs.html");
+                        }
                         sink.rawText(next.getModuleName());
                         sink.link_();
                         sink.tableCell_();
@@ -422,27 +426,28 @@ public class FindbugsReport extends AbstractMavenReport {
             File moduleBaseDir = project.getBasedir();
             File target = new File(moduleBaseDir, "target");
             if (target.exists()) {
-                //FIXME propertize this
+                boolean findbugs = false;
                 File findbugsXml = new File(moduleBaseDir, "target/spotbugsXml.xml");
                 if (!findbugsXml.exists()) {
                     findbugsXml = new File(moduleBaseDir, "target/findbugsXml.xml");
                     if (findbugsXml.exists()) {
+                        findbugs = true;
                         getLog().info("Found a legacy findbugs xml, might want consider switching to spotbugs");
                     }
                 }
 
-                FindbugsItem item = new FindbugsItem();
-                item.setModuleName(project.getArtifactId());
-
                 if (findbugsXml.exists()) {
+                    FindbugsItem item = new FindbugsItem(findbugs);
+                    item.setModuleName(project.getArtifactId());
                     //since all artifacts should have unique names...this should be ok
                     FindbugsReportMetric report = getMetric(findbugsXml);
                     if (report != null) {
                         item.getReportDirs().add(report);
                     }
+                    outDirs.add(item);
                 }
 
-                outDirs.add(item);
+                
 
             }
         }
