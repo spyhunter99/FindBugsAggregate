@@ -25,7 +25,7 @@
         <plexusVersion>1.5.4</plexusVersion>
         <scmVersion>1.4</scmVersion>
         <!-- for ITs -->
-        <javadocPluginVersion>2.9.1</javadocPluginVersion>
+        <javadocPluginVersion>3.5.0</javadocPluginVersion>
         <projectInfoReportsPluginVersion>2.7</projectInfoReportsPluginVersion>
         <checkstylePluginVersion>2.9.1</checkstylePluginVersion>
         <pmdPluginVersion>3.0.1</pmdPluginVersion>
@@ -126,8 +126,16 @@
     
     <build>
         <pluginManagement>
-			
             <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>${javadocPluginVersion}</version>
+                    <configuration>
+                        <doclint>none</doclint>
+                    </configuration>
+                </plugin>
+            
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-plugin-plugin</artifactId>
