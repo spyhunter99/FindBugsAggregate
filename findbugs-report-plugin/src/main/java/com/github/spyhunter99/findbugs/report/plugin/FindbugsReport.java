@@ -36,9 +36,6 @@ import org.apache.maven.reporting.AbstractMavenReport;
 import org.apache.maven.reporting.MavenReportException;
 import org.apache.maven.settings.Settings;
 import org.codehaus.plexus.util.FileUtils;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 
 /**
  * This is our maven reporting plugin
@@ -250,11 +247,10 @@ public class FindbugsReport extends AbstractMavenReport {
             sink.tableHeaderCell();
             sink.rawText("Classes");
             sink.tableHeaderCell_();
-            
-             sink.tableHeaderCell();
+
+            sink.tableHeaderCell();
             sink.rawText("Missing Classes");
             sink.tableHeaderCell_();
-
 
             sink.tableHeaderCell();
             sink.rawText("High");
@@ -272,8 +268,6 @@ public class FindbugsReport extends AbstractMavenReport {
             sink.rawText("Total Bugs");
             sink.tableHeaderCell_();
 
-           
-           
             sink.tableRow_();
 
             boolean success = false;
@@ -315,7 +309,7 @@ public class FindbugsReport extends AbstractMavenReport {
                         sink.tableCell();
                         sink.rawText(next.getReportDirs().get(k).getMissingClasses() + "");
                         sink.tableCell_();
-                        
+
                         sink.tableCell();
                         sink.rawText(next.getReportDirs().get(k).getBugsP1() + "");
                         sink.tableCell_();
@@ -332,8 +326,6 @@ public class FindbugsReport extends AbstractMavenReport {
                         sink.rawText(next.getReportDirs().get(k).getBugs() + "");
                         sink.tableCell_();
 
-                    
-
                         sink.tableRow_();
                     }
                 }
@@ -348,12 +340,10 @@ public class FindbugsReport extends AbstractMavenReport {
                 sink.tableCell();
                 sink.rawText(totalClasses + "");
                 sink.tableCell_();
-                
-                
+
                 sink.tableCell();
                 sink.rawText(totalMissingClasses + "");
                 sink.tableCell_();
-
 
                 sink.tableCell();
                 sink.rawText(totalBugsP1 + "");
@@ -433,7 +423,13 @@ public class FindbugsReport extends AbstractMavenReport {
             File target = new File(moduleBaseDir, "target");
             if (target.exists()) {
                 //FIXME propertize this
-                File findbugsXml = new File(moduleBaseDir, "target/findbugsXml.xml");
+                File findbugsXml = new File(moduleBaseDir, "target/spotbugsXml.xml");
+                if (!findbugsXml.exists()) {
+                    findbugsXml = new File(moduleBaseDir, "target/findbugsXml.xml");
+                    if (findbugsXml.exists()) {
+                        getLog().info("Found a legacy findbugs xml, might want consider switching to spotbugs");
+                    }
+                }
 
                 FindbugsItem item = new FindbugsItem();
                 item.setModuleName(project.getArtifactId());

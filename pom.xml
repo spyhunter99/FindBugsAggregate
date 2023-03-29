@@ -10,6 +10,26 @@
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
        
+        <doxiaVersion>1.12.0</doxiaVersion>
+        <doxiaSiteToolsVersion>1.11.1</doxiaSiteToolsVersion>
+	
+	
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+        
+     
+        <mavenVersion>3.0</mavenVersion>
+        <prerequisiteMavenVersion>2.2.1</prerequisiteMavenVersion>
+        <wagonVersion>1.0</wagonVersion>
+        <plexusVersion>1.5.4</plexusVersion>
+        <scmVersion>1.4</scmVersion>
+        <!-- for ITs -->
+        <javadocPluginVersion>2.9.1</javadocPluginVersion>
+        <projectInfoReportsPluginVersion>2.7</projectInfoReportsPluginVersion>
+        <checkstylePluginVersion>2.9.1</checkstylePluginVersion>
+        <pmdPluginVersion>3.0.1</pmdPluginVersion>
+		
     </properties>
     
    
@@ -108,11 +128,11 @@
         <pluginManagement>
 			
             <plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-plugin-plugin</artifactId>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-plugin-plugin</artifactId>
                     <version>3.6.4</version>
-				</plugin>
+                </plugin>
 			
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -131,6 +151,24 @@
                         <tagNameFormat>findbugs-@{project.version}</tagNameFormat>
                     </configuration>
                 </plugin>
+				
+	
+	
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.12.1</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.apache.maven.doxia</groupId>
+                            <artifactId>doxia-sink-api</artifactId>
+                            <version>${doxiaVersion}</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+		
+		
             </plugins>
         </pluginManagement>
     
@@ -140,11 +178,17 @@
                 <artifactId>findbugs-maven-plugin</artifactId>
                 <version>3.0.5</version>
             </plugin>
+            <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>4.7.3.3</version>
+            </plugin>
            
           
             
         </plugins>
-            
+         
+		 
     </build>
     <modules>
         <module>findbugs-report-plugin</module>
@@ -157,6 +201,11 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>
                 <version>3.0.5</version>
+            </plugin>
+            <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>4.7.3.3</version>
             </plugin>
             
             
@@ -174,8 +223,21 @@
                 </reportSets>
             </plugin>
          
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+				
+				
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.9</version>
+            </plugin>
         </plugins>
     </reporting>
+	
+	   
      
     <profiles>
         <profile>

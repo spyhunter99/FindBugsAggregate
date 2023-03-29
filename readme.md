@@ -1,4 +1,4 @@
-# Findbugs Aggregated Maven Site Report
+# Findbugs/Spotbugs Aggregated Maven Site Report
 
 This plugin (is not perfect) will take Findbugs reports of your maven project, then create a new report with `mvn site`
 that lists each module, along with a summary of the results from the analysis.
